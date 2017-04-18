@@ -44,10 +44,10 @@ function setLoding(){
 			nub++;
 			//console.log(Math.floor(nub/data.length*100));
 			logoText.innerHTML = "已加载 "+(Math.floor(nub/data.length*100))+"%";
-//			if(nub == data.length){
-//				//图片加载完成之后，要做的事情
-//				anmt();
-//			}
+			if(nub == data.length){
+				//图片加载完成之后，要做的事情
+				anmt();
+			}
 		};
 	}
 }

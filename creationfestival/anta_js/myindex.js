@@ -292,6 +292,9 @@ function anmt7(){
 		type: "linear",
 		callBack:function(){
 			setDarg();
+			setTimeout(function(){
+				setSensors();
+			},1000);
 		}
 	});
 }
@@ -510,4 +513,121 @@ function setDarg(){
 			}
 		});
 	}); 
+}
+
+function setSensors(){
+	var pano = document.querySelector('#pano');
+	var panoBg = document.querySelector('#panoBg');
+	var start = {};
+	var now = {};
+	var startEl = {};
+	var lastTime = Date.now();
+	var scale = 129/18;
+	var startZ = -160;
+	var dir = window.orientation; //检测横竖屏
+	window.isStart = false;
+	window.isTouch = false;
+	window.addEventListener('orientationchange', function(e) {
+		dir = window.orientation;//用户切换了横竖之后，重置方向
+	});
+	// deviceorientation执行的间隔 有可能小于
+	/*
+		注意 用户切换了横屏之后，左右旋转就不再是e.gamma，上下旋转也不再是e.beta，所以陀螺仪记得检测横竖屏
+	*/
+	window.addEventListener('deviceorientation', function(e)
+	{
+		if(window.isTouch){
+			return;
+		}
+		switch(dir){
+			case 0:
+				var x = e.beta;
+				var y = e.gamma;
+				break;
+			case 90:
+				var x = e.gamma;
+				var y = e.beta;
+				break;	
+			case -90:
+				var x = -e.gamma;
+				var y = -e.beta;
+				break;	
+			case 180:
+				var x = -e.beta;
+				var y = -e.gamma;
+				break;
+
+		}
+		var nowTime = Date.now();
+		if(nowTime - lastTime < 30){
+			return;
+		}
+		lastTime = nowTime;
+		if(!isStart){
+			//start
+			isStart = true;
+			start.x = x;
+			start.y = y;
+			startEl.x = css(pano,"rotateX");
+			startEl.y = css(pano,"rotateY");
+		} else {
+			//move
+			now.x = x;
+			now.y = y;
+			var dis = {};
+			dis.x = now.x - start.x;
+			dis.y = now.y - start.y;
+			var deg = {};
+			deg.x = startEl.x + dis.x;
+			deg.y = startEl.y + dis.y;
+			//pano.innerHTML = deg.x;
+			if(deg.x > 45){
+				deg.x = 45;
+			} else if(deg.x < -45){
+				deg.x = -45;
+			}
+			var disXZ = Math.abs(Math.round((deg.x  - css(pano,"rotateX"))*scale));
+			var disYZ = Math.abs(Math.round((deg.y  - css(pano,"rotateY"))*scale));
+			var disZ = Math.max(disXZ,disYZ);
+			if(disZ > 300){
+				disZ = 300;
+			}
+			MTween({
+				el:tZ,
+				target:{
+					translateZ: startZ - disZ
+				},
+				time: 300,
+				type: "easeOut",
+				callBack: function(){
+					MTween({
+						el:tZ,
+						target:{
+							translateZ: startZ
+						},
+						time: 400,
+						type: "easeOut"
+					});
+				}
+			});
+			MTween({
+				el:pano,
+				target:{
+					rotateX:deg.x,
+					rotateY:deg.y
+				},
+				time: 800,
+				type: "easeOut"
+			});
+			MTween({
+				el:panoBg,
+				target:{
+					rotateX:deg.x,
+					rotateY:deg.y
+				},
+				time: 800,
+				type: "easeOut"
+			});
+		}
+	});
 }
