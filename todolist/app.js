@@ -26,17 +26,17 @@ new Vue({
 var list = [
 	{
 		id:1,
-		title:"吃饭",
+		title:"html/css/js",
 		isSelected:false   //是否这条数据是选中的
 	},
 	{
 		id:2,
-		title:"吃饭睡觉",
+		title:"jquery/bootstrap/vue",
 		isSelected:false
 	},
 	{
 		id:3,
-		title:"吃饭睡觉打豆豆",
+		title:"webpack",
 		isSelected:false
 	}
 ];
