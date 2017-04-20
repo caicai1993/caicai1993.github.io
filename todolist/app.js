@@ -23,25 +23,52 @@ new Vue({
  */
 
 
-var list = [
-	{
-		id:1,
-		title:"html/css/js",
-		isSelected:false   //是否这条数据是选中的
-	},
-	{
-		id:2,
-		title:"jquery/bootstrap/vue",
-		isSelected:false
-	},
-	{
-		id:3,
-		title:"webpack",
-		isSelected:false
-	}
-];
+//var list = [
+//	{
+//		id:1,
+//		title:"html/css/js",
+//		isSelected:false   //是否这条数据是选中的
+//	},
+//	{
+//		id:2,
+//		title:"jquery/bootstrap/vue",
+//		isSelected:false
+//	},
+//	{
+//		id:3,
+//		title:"webpack",
+//		isSelected:false
+//	}
+//];
 
 var todoapp = document.querySelector(".todoapp");
+
+var store = {
+	savestroe: function(key, val){
+		localStorage.setItem(key, JSON.stringify(val));	//把数组变成json格式的
+	},
+	getstroe:function(key){
+		return JSON.parse(localStorage.getItem(key)) || [];
+	}
+}
+
+var list = store.getstroe("cxx");
+
+var filter = {
+	"all": function(list){
+		return list;
+	},
+	"done":function(list){
+		return list.filter(function(val){
+			return val.isSelected == true;
+		});
+	},
+	"undone":function(list){
+		return list.filter(function(val){
+			return val.isSelected == false;
+		});
+	}
+}
 
 var vm = new Vue({
 	el: todoapp,
@@ -49,13 +76,25 @@ var vm = new Vue({
 			todos: "",
 			allChecke: false,
 			itemtodo: "",
-			oldtitle: ""
+			oldtitle: "",
+			visibility: "all"
 		},
+	watch:{
+		items: {
+			handler: function(){
+				store.savestroe("cxx", this.items);
+			},
+			deep: true
+		}
+	},
 	computed:{
 		noCheckednum: function(){
 			return this.items.filter(function(val){
 				return val.isSelected === false;
 			}).length;
+		},
+		filteredList: function(){
+			return filter[this.visibility] ? filter[this.visibility](list) : list;
 		}
 	},
 	methods: {
@@ -113,3 +152,14 @@ var vm = new Vue({
 		}
 	}
 });
+
+function watchHashChange(){
+	var hash = window.location.hash.slice(1);
+
+	vm.visibility = hash;
+	
+}
+
+watchHashChange();
+
+window.addEventListener("hashchange",watchHashChange);

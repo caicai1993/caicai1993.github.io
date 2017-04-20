@@ -23,7 +23,7 @@
             <section class="main">
                 <input class="toggle-all" type="checkbox" checked="" v-on:click="allFn">
                 <ul class="todo-list">
-                    <li v-for="item in items" v-bind:class="{completed: item.isSelected, editing: item===itemtodo}">
+                    <li v-for="item in filteredList" v-bind:class="{completed: item.isSelected, editing: item===itemtodo}">
                         <div class="view">
                             <input class="toggle" type="checkbox" v-on:click="toggleFn(item)" v-bind:checked="item.isSelected"/>
                             <label v-on:click="editFn(item)" >{{item.title}}</label>
@@ -42,6 +42,15 @@
 	            <span class="todo-count">
 	            	<strong>{{noCheckednum}}</strong>
 	            	<span>条未选中</span>
+	            </span>
+	            <span class="btns">
+	            	<a href="#all">显示全部任务</a>
+	            </span>
+	            <span class="btns">
+	            	<a href="#done">显示已完成任务</a>
+	            </span>
+	            <span class="btns">
+	            	<a href="#undone">显示未完成任务</a>
 	            </span>
             </footer>
         </div>
