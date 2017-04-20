@@ -97,6 +97,9 @@ var vm = new Vue({
 			this.itemtodo = "";
 		},
 		saveFn(val){//编辑完成后
+			if(!val.title.trim()){
+				val.title = this.oldtitle;
+			}
 			this.itemtodo = "";
 		}
 	},
