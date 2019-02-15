@@ -497,7 +497,8 @@ body{
 	cursor: default;
 }
 .brbot{
-	height: 1000px;
+	height: 520px;
+	overflow-y: scroll;
 }
 .brbot .files{
 	width: 178px;

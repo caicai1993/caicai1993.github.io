@@ -3,7 +3,7 @@
 	var head = document.querySelector(".head");
 	var content = document.querySelector(".content");
 	function resize(){
-		content.style.height = t.view().h - head.offsetHeight + "px";
+		content.style.height = t.view().h - head.offsetHeight-200 + "px";
 	}
 	resize();
 	window.onresize = resize;
