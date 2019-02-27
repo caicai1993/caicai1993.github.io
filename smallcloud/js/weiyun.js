@@ -5,8 +5,8 @@
 	function resize(){
 		content.style.height = t.view().h - head.offsetHeight-200 + "px";
 	}
-	resize();
-	window.onresize = resize;
+	//resize();
+	//window.onresize = resize;
 	//================================渲染各个区域============================================================
 	//准备数据
 	var datas = data.files;
